@@ -1,6 +1,6 @@
 package org.example;
 
-import java.net.ConnectException;
+
 import java.sql.*;
 import java.time.Instant;
 import java.util.ArrayList;
@@ -64,7 +64,7 @@ public class DBUtils {
                 task.setTitle(resultSet.getString("title"));
                 task.setDescription(resultSet.getString("description"));
                 task.setTime(Instant.ofEpochMilli(resultSet.getLong("time")));
-                task.getDifficult(resultSet.getInt("difficult"));
+                task.getDifficult();
                 task.setDone(resultSet.getInt("is_done") == 1);
 
                 tasks.add(task);
@@ -87,6 +87,35 @@ public class DBUtils {
                     """);
 
             preparedStatement.setLong(1, id);
+            preparedStatement.execute();
+            preparedStatement.close();
+        } catch (SQLException ex) {
+            System.out.println("sql ex");
+            ex.printStackTrace();
+        }
+    }
+
+    public static void edit(Connection connection, Task task) {
+        try {
+            // Подготовленный запрос
+            PreparedStatement preparedStatement = connection.prepareStatement("""
+                        UPDATE task
+                        SET 
+                            title = ?,
+                            description = ?,
+                            time = ?,
+                            difficult = ?,
+                            is_done = ?
+                        WHERE id = ?
+                    """);
+
+            preparedStatement.setString(1, task.getTitle());
+            preparedStatement.setString(2, task.getDescription());
+            preparedStatement.setLong(3, task.getTime().toEpochMilli());
+            preparedStatement.setInt(4, task.getDifficult());
+            preparedStatement.setInt(5, task.isDone() ? 1 : 0);
+            preparedStatement.setLong(6, task.getId());
+
             preparedStatement.execute();
             preparedStatement.close();
         } catch (SQLException ex) {

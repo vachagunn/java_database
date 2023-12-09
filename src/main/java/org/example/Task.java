@@ -26,8 +26,8 @@ public class Task {
         return time;
     }
 
-    public int getDifficult(int difficult) {
-        return this.difficult;
+    public int getDifficult() {
+        return difficult;
     }
 
     public boolean isDone() {
@@ -50,7 +50,7 @@ public class Task {
         this.time = time;
     }
 
-    public void setDifficult(int difficult) {
+    public void setDifficult(Integer difficult) {
         this.difficult = difficult;
     }
 
