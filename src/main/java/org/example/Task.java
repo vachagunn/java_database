@@ -7,7 +7,7 @@ public class Task {
     private String title;
     private String description;
     private Instant time;
-    private int difficult;
+    private long difficult;
     private boolean done;
 
     public long getId() {
@@ -26,7 +26,7 @@ public class Task {
         return time;
     }
 
-    public int getDifficult() {
+    public long getDifficult() {
         return difficult;
     }
 
@@ -50,7 +50,7 @@ public class Task {
         this.time = time;
     }
 
-    public void setDifficult(Integer difficult) {
+    public void setDifficult(int difficult) {
         this.difficult = difficult;
     }
 

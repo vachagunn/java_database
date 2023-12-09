@@ -41,7 +41,7 @@ public class DBUtils {
             preparedStatement.setString(1, title);
             preparedStatement.setString(2, description);
             preparedStatement.setLong(3, System.currentTimeMillis());
-            preparedStatement.setInt(4, difficult);
+            preparedStatement.setLong(4, difficult);
             preparedStatement.execute();
 
             preparedStatement.close();
@@ -64,7 +64,7 @@ public class DBUtils {
                 task.setTitle(resultSet.getString("title"));
                 task.setDescription(resultSet.getString("description"));
                 task.setTime(Instant.ofEpochMilli(resultSet.getLong("time")));
-                task.getDifficult();
+                task.setDifficult(resultSet.getInt("difficult"));
                 task.setDone(resultSet.getInt("is_done") == 1);
 
                 tasks.add(task);
@@ -112,7 +112,7 @@ public class DBUtils {
             preparedStatement.setString(1, task.getTitle());
             preparedStatement.setString(2, task.getDescription());
             preparedStatement.setLong(3, task.getTime().toEpochMilli());
-            preparedStatement.setInt(4, task.getDifficult());
+            preparedStatement.setLong(4, task.getDifficult());
             preparedStatement.setInt(5, task.isDone() ? 1 : 0);
             preparedStatement.setLong(6, task.getId());
 
@@ -136,7 +136,7 @@ public class DBUtils {
                 task.setTitle(resultSet.getString("title"));
                 task.setDescription(resultSet.getString("description"));
                 task.setTime(Instant.ofEpochMilli(resultSet.getLong("time")));
-                task.getDifficult();
+                task.setDifficult(resultSet.getInt("difficult"));
                 task.setDone(resultSet.getInt("is_done") == 1);
 
                 tasks.add(task);

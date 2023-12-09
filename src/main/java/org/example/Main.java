@@ -11,8 +11,6 @@ public class Main {
         String url = "jdbc:sqlite:database.db";
         Connection connection = DriverManager.getConnection(url);
 
-        // todo filter undone
-
         findAllUndone(connection).forEach(System.out::println);
 
         connection.close();
