@@ -1,5 +1,6 @@
 package org.example;
 
+import java.net.ConnectException;
 import java.sql.*;
 import java.time.Instant;
 import java.util.ArrayList;
@@ -49,7 +50,6 @@ public class DBUtils {
             System.out.println("sql ex");
             ex.printStackTrace();
         }
-
     }
 
     public static List<Task> findAll(Connection connection) {
@@ -58,13 +58,12 @@ public class DBUtils {
             Statement statement = connection.createStatement();
             ResultSet resultSet = statement.executeQuery("SELECT * FROM task");
 
-            // Переход на следующую строку
             while (resultSet.next()) {
                 Task task = new Task();
                 task.setId(resultSet.getLong("id"));
                 task.setTitle(resultSet.getString("title"));
                 task.setDescription(resultSet.getString("description"));
-                task.setTime(Instant.ofEpochSecond(resultSet.getLong("time")));
+                task.setTime(Instant.ofEpochMilli(resultSet.getLong("time")));
                 task.getDifficult(resultSet.getInt("difficult"));
                 task.setDone(resultSet.getInt("is_done") == 1);
 
@@ -76,5 +75,23 @@ public class DBUtils {
             ex.printStackTrace();
         }
         return tasks;
+    }
+
+    public static void markDone(Connection connection, long id) {
+        try {
+            // Подготовленный запрос
+            PreparedStatement preparedStatement = connection.prepareStatement("""
+                        UPDATE task
+                        SET is_done = 1
+                        WHERE id = ?
+                    """);
+
+            preparedStatement.setLong(1, id);
+            preparedStatement.execute();
+            preparedStatement.close();
+        } catch (SQLException ex) {
+            System.out.println("sql ex");
+            ex.printStackTrace();
+        }
     }
 }
