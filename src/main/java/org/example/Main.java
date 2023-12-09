@@ -1,30 +1,18 @@
 package org.example;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
+
+import static org.example.DBUtils.addTask;
 
 public class Main {
     public static void main(String[] args) throws SQLException {
         String url = "jdbc:sqlite:database.db";
         Connection connection = DriverManager.getConnection(url);
 
-        // table task
-        // id, title, description, time, difficult, isDone
-        Statement statement = connection.createStatement();
-        statement.execute("""
-                CREATE TABLE task (
-                    id INTEGER PRIMARY KEY AUTOINCREMENT,
-                    title TEXT,
-                    description TEXT,
-                    time INTEGER,
-                    difficult INTEGER,
-                    is_done INTEGER
-                )
-                """);
+        addTask(connection, "Первая задача", "Подробное описание первой задачи", 1);
+        addTask(connection, "Вторая задача", "Подробное описание второй задачи", 2);
+        addTask(connection, "Третья задача", "Подробное описание третьей задачи", 3);
 
-        statement.close();
         connection.close();
     }
 }
