@@ -1,9 +1,9 @@
 package org.example;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
+import java.time.Instant;
+import java.util.ArrayList;
+import java.util.List;
 
 public class DBUtils {
     public static void initTable(Connection connection) {
@@ -12,15 +12,15 @@ public class DBUtils {
         try {
             Statement statement = connection.createStatement();
             statement.execute("""
-                CREATE TABLE task (
-                    id INTEGER PRIMARY KEY AUTOINCREMENT,
-                    title TEXT,
-                    description TEXT,
-                    time INTEGER,
-                    difficult INTEGER,
-                    is_done INTEGER
-                )
-                """);
+                    CREATE TABLE task (
+                        id INTEGER PRIMARY KEY AUTOINCREMENT,
+                        title TEXT,
+                        description TEXT,
+                        time INTEGER,
+                        difficult INTEGER,
+                        is_done INTEGER
+                    )
+                    """);
 
             statement.close();
         } catch (SQLException ex) {
@@ -33,9 +33,9 @@ public class DBUtils {
         try {
             // Подготовленный запрос
             PreparedStatement preparedStatement = connection.prepareStatement("""
-                    INSERT INTO task (title, description, time, difficult, is_done)
-                    VALUES (?, ?, ?, ?, 0)
-                """);
+                        INSERT INTO task (title, description, time, difficult, is_done)
+                        VALUES (?, ?, ?, ?, 0)
+                    """);
 
             preparedStatement.setString(1, title);
             preparedStatement.setString(2, description);
@@ -50,5 +50,31 @@ public class DBUtils {
             ex.printStackTrace();
         }
 
+    }
+
+    public static List<Task> findAll(Connection connection) {
+        List<Task> tasks = new ArrayList<>();
+        try {
+            Statement statement = connection.createStatement();
+            ResultSet resultSet = statement.executeQuery("SELECT * FROM task");
+
+            // Переход на следующую строку
+            while (resultSet.next()) {
+                Task task = new Task();
+                task.setId(resultSet.getLong("id"));
+                task.setTitle(resultSet.getString("title"));
+                task.setDescription(resultSet.getString("description"));
+                task.setTime(Instant.ofEpochSecond(resultSet.getLong("time")));
+                task.getDifficult(resultSet.getInt("difficult"));
+                task.setDone(resultSet.getInt("is_done") == 1);
+
+                tasks.add(task);
+            }
+
+        } catch (SQLException ex) {
+            System.out.println("sql ex");
+            ex.printStackTrace();
+        }
+        return tasks;
     }
 }
