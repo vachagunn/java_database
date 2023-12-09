@@ -123,4 +123,29 @@ public class DBUtils {
             ex.printStackTrace();
         }
     }
+
+    public static List<Task> findAllUndone(Connection connection) {
+        List<Task> tasks = new ArrayList<>();
+        try {
+            Statement statement = connection.createStatement();
+            ResultSet resultSet = statement.executeQuery("SELECT * FROM task WHERE is_done = 0");
+
+            while (resultSet.next()) {
+                Task task = new Task();
+                task.setId(resultSet.getLong("id"));
+                task.setTitle(resultSet.getString("title"));
+                task.setDescription(resultSet.getString("description"));
+                task.setTime(Instant.ofEpochMilli(resultSet.getLong("time")));
+                task.getDifficult();
+                task.setDone(resultSet.getInt("is_done") == 1);
+
+                tasks.add(task);
+            }
+
+        } catch (SQLException ex) {
+            System.out.println("sql ex");
+            ex.printStackTrace();
+        }
+        return tasks;
+    }
 }
