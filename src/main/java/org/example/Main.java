@@ -3,6 +3,7 @@ package org.example;
 import javax.swing.*;
 import javax.swing.event.TableModelListener;
 import javax.swing.table.TableModel;
+import java.awt.*;
 import java.sql.*;
 import java.time.Instant;
 import java.util.List;
@@ -17,7 +18,7 @@ public class Main {
         connection.close();
 
         JFrame frame = new JFrame();
-        frame.setSize(400, 600);
+        frame.setSize(800, 600);
         frame.setVisible(true);
         frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         frame.setLocationRelativeTo(null);
@@ -82,7 +83,11 @@ public class Main {
 
             }
         });
+        JPanel panel = new JPanel();
+        JButton addTask = new JButton("Добавить");
 
+        panel.add(addTask);
+        frame.add(panel, BorderLayout.NORTH);
         frame.add(table);
         frame.pack();
     }
